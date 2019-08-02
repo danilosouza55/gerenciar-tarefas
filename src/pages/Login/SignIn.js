@@ -20,7 +20,7 @@ class SignIn extends Component {
             validate: {
                 emailState: '',
             },
-        }
+        };
         this.handleChange = this.handleChange.bind(this);
     }
 

@@ -9,11 +9,6 @@ import {logout} from '../services/Auth';
 
 export default class Header extends Component {
 
-    onClickSair = () => {
-        logout();
-        this.props.history.push('/');
-    }
-
     render() {
         return (
             <div>
@@ -27,7 +22,7 @@ export default class Header extends Component {
                             <NavLink href="/usuarios/">Lista de Usuários</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#" onClick={this.onClickSair}>Sair</NavLink>
+                            <NavLink href="/" className="text-danger" onClick={logout}>Sair</NavLink>
                         </NavItem>
                     </Nav>
                 </Navbar>

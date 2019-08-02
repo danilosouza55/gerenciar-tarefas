@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table} from 'reactstrap';
+import {Table, Button} from 'reactstrap';
 
 import {
     NavLink
@@ -28,20 +28,80 @@ export default class Index extends Component {
             })
     }
 
+    handleExcluir = async tarefa => {
+        api.delete(`tarefas/${tarefa.id}`)
+            .then(response => {
+
+                let dado = this.state.tasks;
+                dado.splice(dado.indexOf(tarefa), 1)
+                console.log(dado);
+                this.setState({dado})
+            })
+            .catch(err => {
+                window.alert('erro');
+                console.warn(err);
+            })
+    };
+
+    handleConcluir = async tarefa => {
+        api.put(`tarefas/${tarefa.id}/concluida`)
+            .then(response => {
+
+                let dado = this.state.tasks;
+                const idx = dado.indexOf(tarefa);
+                dado[idx].concluida = true;
+
+                this.setState({dado});
+            })
+    };
+
+    handleDesmarcar = async tarefa => {
+        api.delete(`tarefas/${tarefa.id}/concluida`)
+            .then(response => {
+
+                let dado = this.state.tasks;
+                const idx = dado.indexOf(tarefa);
+                dado[idx].concluida = false;
+
+                this.setState({dado});
+            })
+    }
+
     renderTasks = () => {
         const {tasks} = this.state;
 
-        const tasksItems = tasks.map((task) => {
+        const tasksItems = tasks.map((tarefa) => {
             return (
-                <tr key={task.id}>
-                    <td>{task.id}</td>
+                <tr key={tarefa.id}>
                     <td>
-                        <NavLink href={'/tarefas/addEdit/' + task.id}>
-                            {task.titulo}
+                        <NavLink href={'/tarefas/addEdit/' + tarefa.id}>
+                            {tarefa.id}
                         </NavLink>
                     </td>
-                    <td>{task.concluida ? 'Sim' : 'Não'}</td>
-                    <td>{task.usuarioId}</td>
+                    <td>
+                        <NavLink href={'/tarefas/addEdit/' + tarefa.id}>
+                            {tarefa.titulo}
+                        </NavLink>
+                    </td>
+                    <td>
+                        {tarefa.concluida
+                            ?
+                            <Button color="success" onClick={() => this.handleDesmarcar(tarefa)}>
+                                <span role="img" aria-label="Não">SIM</span>
+                            </Button>
+                            :
+                            <Button color="danger" onClick={() => this.handleConcluir(tarefa)}>
+                                <span role="img" aria-label="Não">NÃO</span>
+                            </Button>}
+                    </td>
+                    <td>
+                        <NavLink href={'/tarefas/addEdit/' + tarefa.id}>
+                            {tarefa.usuarioId}
+                        </NavLink>
+                    </td>
+                    <td>
+                        <Button color="danger" onClick={() => this.handleExcluir(tarefa)}>Excluir</Button>{' '}
+                    </td>
                 </tr>
             )
         });
